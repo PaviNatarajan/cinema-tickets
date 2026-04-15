@@ -41,4 +41,42 @@ class TicketServiceImplTest {
                 )
         );
     }
+
+    @Test
+    void shouldRejectInfantTicketWithoutAdult() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.purchaseTickets(
+                        1L,
+                        new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1)
+                )
+        );
+    }
+
+    @Test
+    void shouldRejectMoreThan25TotalTickets() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.purchaseTickets(
+                        1L,
+                        new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 26)
+                )
+        );
+    }
+
+    @Test
+    void shouldRejectMoreInfantsThanAdults() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.purchaseTickets(
+                        1L,
+                        new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1),
+                        new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 2)
+                )
+        );
+    }
+
+    @Test
+    void shouldRejectEmptyTicketRequest() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.purchaseTickets(1L)
+        );
+    }
 }
